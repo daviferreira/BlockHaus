@@ -56,13 +56,21 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        withAnimation(.spring(duration: 0.3)) {
+                            gridModel.randomSelection()
+                        }
+                    } label: {
+                        Label("Random", systemImage: "dice")
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
                         withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
                             gridModel.roll()
                         }
                     } label: {
                         Label("Refresh", systemImage: "arrow.clockwise")
                     }
-                    .tint(BauhausColors.red)
                 }
             }
             .safeAreaInset(edge: .bottom) {
@@ -75,7 +83,7 @@ struct ContentView: View {
                         Label("Share", systemImage: "square.and.arrow.up")
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(BauhausColors.blue)
+                    .tint(settings.activeColors.first ?? BauhausColors.blue)
                     .padding(.bottom, 8)
                 }
             }
@@ -94,19 +102,19 @@ struct ContentView: View {
                 gridModel.clearSelection()
             }
             .onChange(of: settings.paletteId) {
-                withAnimation { gridModel.roll() }
+                withAnimation { gridModel.refresh() }
             }
             .onChange(of: settings.colorCount) {
-                withAnimation { gridModel.roll() }
+                withAnimation { gridModel.refresh() }
             }
             .onChange(of: settings.circlesEnabled) {
-                withAnimation { gridModel.roll() }
+                withAnimation { gridModel.refresh() }
             }
             .onChange(of: settings.trianglesEnabled) {
-                withAnimation { gridModel.roll() }
+                withAnimation { gridModel.refresh() }
             }
             .onChange(of: settings.geometricEnabled) {
-                withAnimation { gridModel.roll() }
+                withAnimation { gridModel.refresh() }
             }
         }
     }

@@ -51,9 +51,16 @@ class GridModel {
         }
     }
 
-    func roll() {
-        rollTrigger += 1
-        selectionOrder.removeAll()
+    func randomSelection() {
+        clearSelection()
+        let count = min(settings.maxSelection, tiles.count)
+        let picked = tiles.shuffled().prefix(count)
+        for tile in picked {
+            toggleSelection(id: tile.id)
+        }
+    }
+
+    func refresh() {
         let colors = settings.activeColors
         let patterns = settings.activePatterns
         for index in tiles.indices {
@@ -61,6 +68,14 @@ class GridModel {
             tiles[index].pattern = TilePattern.random(from: patterns)
             tiles[index].foreground = pair.foreground
             tiles[index].background = pair.background
+        }
+    }
+
+    func roll() {
+        rollTrigger += 1
+        selectionOrder.removeAll()
+        refresh()
+        for index in tiles.indices {
             tiles[index].isSelected = false
         }
     }
