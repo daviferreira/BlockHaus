@@ -16,6 +16,7 @@
 		A10007 /* TileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007 /* TileModel.swift */; };
 		A10008 /* GridModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008 /* GridModel.swift */; };
 		A10009 /* BauhausColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* BauhausColors.swift */; };
+		A10010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10010 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B10007 /* TileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileModel.swift; sourceTree = "<group>"; };
 		B10008 /* GridModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridModel.swift; sourceTree = "<group>"; };
 		B10009 /* BauhausColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BauhausColors.swift; sourceTree = "<group>"; };
+		B10010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C10001 /* BlockHaus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlockHaus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -57,6 +59,7 @@
 				E10003 /* Models */,
 				E10004 /* Views */,
 				E10005 /* Theme */,
+				B10010 /* Assets.xcassets */,
 			);
 			path = BlockHaus;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10010 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
