@@ -19,7 +19,9 @@ extension Notification.Name {
 
 struct ContentView: View {
     @State private var gridModel = GridModel()
-    @State private var shareItem: ShareableImage?
+    @State private var showShareSheet = false
+    @State private var shareImage: UIImage?
+    @State private var tilesToShare: [TileModel] = []
 
     var body: some View {
         NavigationStack {
@@ -46,17 +48,21 @@ struct ContentView: View {
                     }
                     .tint(BauhausColors.red)
                 }
-                ToolbarItem(placement: .bottomBar) {
+            }
+            .safeAreaInset(edge: .bottom) {
+                if !gridModel.selectedTiles.isEmpty {
                     Button {
-                        let image = renderGridImage(tiles: gridModel.selectedTiles)
-                        shareItem = ShareableImage(image: image)
+                        tilesToShare = gridModel.selectedTiles
+                        shareImage = nil
+                        showShareSheet = true
                     } label: {
                         Label("Share", systemImage: "square.and.arrow.up")
                             .font(.headline)
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(BauhausColors.blue)
-                    .disabled(gridModel.selectedTiles.isEmpty)
+                    .padding()
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShake)) { _ in
@@ -64,13 +70,41 @@ struct ContentView: View {
                     gridModel.roll()
                 }
             }
-            .sheet(item: $shareItem) { item in
-                ShareSheet(items: [item.image])
+            .sheet(isPresented: $showShareSheet) {
+                ShareSheetContainer(tiles: tilesToShare)
             }
         }
     }
 
-    private func renderGridImage(tiles: [TileModel], size: CGFloat = 1024) -> UIImage {
+}
+
+struct ShareSheetContainer: View {
+    let tiles: [TileModel]
+    @State private var image: UIImage?
+
+    var body: some View {
+        Group {
+            if let image {
+                ShareSheet(items: [image])
+            } else {
+                VStack(spacing: 12) {
+                    ProgressView()
+                    Text("Preparing image...")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .presentationDetents([.medium])
+            }
+        }
+        .task {
+            image = Self.renderGridImage(tiles: tiles)
+        }
+    }
+
+    @MainActor
+    private static func renderGridImage(tiles: [TileModel], size: CGFloat = 1024) -> UIImage? {
+        guard !tiles.isEmpty else { return nil }
         let cellSize = size / 2
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
         return renderer.image { ctx in
@@ -85,10 +119,8 @@ struct ContentView: View {
                         width: cellSize,
                         height: cellSize
                     )
-                    // Draw background
                     gc.setFillColor(UIColor(tile.background).cgColor)
                     gc.fill(rect)
-                    // Use ImageRenderer with a Canvas for each tile
                     let tileImage = renderTileImage(tile: tile, size: cellSize)
                     tileImage.draw(in: rect)
                 }
@@ -96,7 +128,8 @@ struct ContentView: View {
         }
     }
 
-    private func renderTileImage(tile: TileModel, size: CGFloat) -> UIImage {
+    @MainActor
+    private static func renderTileImage(tile: TileModel, size: CGFloat) -> UIImage {
         let renderer = ImageRenderer(content:
             Canvas { context, canvasSize in
                 let rect = CGRect(origin: .zero, size: canvasSize)
@@ -113,11 +146,6 @@ struct ContentView: View {
         renderer.scale = 1.0
         return renderer.uiImage ?? UIImage()
     }
-}
-
-struct ShareableImage: Identifiable {
-    let id = UUID()
-    let image: UIImage
 }
 
 struct ShareSheet: UIViewControllerRepresentable {
