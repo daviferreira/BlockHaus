@@ -19,9 +19,7 @@ extension Notification.Name {
 
 struct ContentView: View {
     @State private var gridModel = GridModel()
-    @State private var showShareSheet = false
-    @State private var shareImage: UIImage?
-    @State private var tilesToShare: [TileModel] = []
+    @State private var shareItem: ShareableImage?
 
     var body: some View {
         NavigationStack {
@@ -52,17 +50,15 @@ struct ContentView: View {
             .safeAreaInset(edge: .bottom) {
                 if !gridModel.selectedTiles.isEmpty {
                     Button {
-                        tilesToShare = gridModel.selectedTiles
-                        shareImage = nil
-                        showShareSheet = true
+                        if let image = renderGridImage(tiles: gridModel.selectedTiles) {
+                            shareItem = ShareableImage(image: image)
+                        }
                     } label: {
                         Label("Share", systemImage: "square.and.arrow.up")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(BauhausColors.blue)
-                    .padding()
+                    .padding(.bottom, 8)
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: .deviceDidShake)) { _ in
@@ -70,40 +66,13 @@ struct ContentView: View {
                     gridModel.roll()
                 }
             }
-            .sheet(isPresented: $showShareSheet) {
-                ShareSheetContainer(tiles: tilesToShare)
+            .sheet(item: $shareItem) { item in
+                ShareSheet(items: [item.image])
             }
         }
     }
 
-}
-
-struct ShareSheetContainer: View {
-    let tiles: [TileModel]
-    @State private var image: UIImage?
-
-    var body: some View {
-        Group {
-            if let image {
-                ShareSheet(items: [image])
-            } else {
-                VStack(spacing: 12) {
-                    ProgressView()
-                    Text("Preparing image...")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .presentationDetents([.medium])
-            }
-        }
-        .task {
-            image = Self.renderGridImage(tiles: tiles)
-        }
-    }
-
-    @MainActor
-    private static func renderGridImage(tiles: [TileModel], size: CGFloat = 1024) -> UIImage? {
+    private func renderGridImage(tiles: [TileModel], size: CGFloat = 1024) -> UIImage? {
         guard !tiles.isEmpty else { return nil }
         let cellSize = size / 2
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
@@ -121,31 +90,24 @@ struct ShareSheetContainer: View {
                     )
                     gc.setFillColor(UIColor(tile.background).cgColor)
                     gc.fill(rect)
-                    let tileImage = renderTileImage(tile: tile, size: cellSize)
-                    tileImage.draw(in: rect)
+                    let tileRenderer = ImageRenderer(content:
+                        Canvas { context, canvasSize in
+                            let r = CGRect(origin: .zero, size: canvasSize)
+                            TilePatternRenderer.draw(tile.pattern, in: r, context: context, foreground: tile.foreground, background: tile.background)
+                        }
+                        .frame(width: cellSize, height: cellSize)
+                    )
+                    tileRenderer.scale = 1.0
+                    tileRenderer.uiImage?.draw(in: rect)
                 }
             }
         }
     }
+}
 
-    @MainActor
-    private static func renderTileImage(tile: TileModel, size: CGFloat) -> UIImage {
-        let renderer = ImageRenderer(content:
-            Canvas { context, canvasSize in
-                let rect = CGRect(origin: .zero, size: canvasSize)
-                TilePatternRenderer.draw(
-                    tile.pattern,
-                    in: rect,
-                    context: context,
-                    foreground: tile.foreground,
-                    background: tile.background
-                )
-            }
-            .frame(width: size, height: size)
-        )
-        renderer.scale = 1.0
-        return renderer.uiImage ?? UIImage()
-    }
+struct ShareableImage: Identifiable {
+    let id = UUID()
+    let image: UIImage
 }
 
 struct ShareSheet: UIViewControllerRepresentable {
