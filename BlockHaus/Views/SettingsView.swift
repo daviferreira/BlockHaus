@@ -50,9 +50,9 @@ struct SettingsView: View {
                         Text("Active:")
                             .font(.caption)
                             .foregroundStyle(.secondary)
-                        ForEach(0..<settings.activeColors.count, id: \.self) { i in
+                        ForEach(Array(settings.activeColors.enumerated()), id: \.offset) { _, color in
                             Circle()
-                                .fill(settings.activeColors[i])
+                                .fill(color)
                                 .frame(width: 20, height: 20)
                         }
                     }
