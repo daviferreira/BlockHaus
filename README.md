@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon.png" width="200" height="200" alt="BlockHaus app icon" style="border-radius: 22%;">
+  <img src="icon-rounded.png" width="200" height="200" alt="BlockHaus app icon">
 </p>
 
 <h1 align="center">BlockHaus</h1>
