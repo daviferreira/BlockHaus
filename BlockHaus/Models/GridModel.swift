@@ -35,6 +35,11 @@ class GridModel {
         }
     }
 
+    func shuffleSelection() {
+        guard selectionOrder.count > 1 else { return }
+        selectionOrder.shuffle()
+    }
+
     func roll() {
         rollTrigger += 1
         selectionOrder.removeAll()

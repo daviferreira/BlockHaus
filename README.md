@@ -21,9 +21,9 @@ Inspired by classic Bauhaus geometric forms. Pick up to 4 tiles from a randomize
 - **20 geometric tile patterns** — circles, half-circles, quarter-circles, triangles, stripes, dots, crosses, nested squares, and more
 - **Tile strip** — horizontal scrollable row of randomized tiles
 - **Tap to select** up to 4 tiles (numbered 1-4 in selection order)
-- **Pattern canvas** — fills the viewport with a seeded-random repeat of your selected tiles
-- **Roll** — tap the dice button to re-randomize all tiles and reset selections
-- **Shake** your device to re-roll
+- **2x2 pattern grid** — displays your selected tiles in a compact composition; tap to shuffle the order
+- **Generate** — re-randomize all tiles and reset selections
+- **Shake** your device to regenerate
 - **Bauhaus color palette** — red, yellow, blue, black, white
 - **Adaptive layout** — strip and canvas reflow on rotation and iPad
 

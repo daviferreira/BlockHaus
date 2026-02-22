@@ -25,8 +25,12 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 TileStripView(model: gridModel)
 
-                PatternCanvasView(selectedTiles: gridModel.selectedTiles)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                PatternCanvasView(selectedTiles: gridModel.selectedTiles) {
+                    withAnimation(.spring(duration: 0.3)) {
+                        gridModel.shuffleSelection()
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("BlockHaus")
             .toolbar {
@@ -36,7 +40,7 @@ struct ContentView: View {
                             gridModel.roll()
                         }
                     } label: {
-                        Label("Roll", systemImage: "dice.fill")
+                        Text("Generate")
                             .font(.headline)
                     }
                     .buttonStyle(.borderedProminent)
