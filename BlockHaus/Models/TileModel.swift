@@ -5,7 +5,7 @@ struct TileModel: Identifiable {
     var pattern: TilePattern
     var foreground: Color
     var background: Color
-    var isLocked: Bool
+    var isSelected: Bool = false
 
     static func random() -> TileModel {
         let colors = BauhausColors.randomPair()
@@ -13,8 +13,7 @@ struct TileModel: Identifiable {
             id: UUID(),
             pattern: .random(),
             foreground: colors.foreground,
-            background: colors.background,
-            isLocked: false
+            background: colors.background
         )
     }
 }

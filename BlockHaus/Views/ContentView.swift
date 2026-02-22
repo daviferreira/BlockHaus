@@ -22,27 +22,32 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            GridView(model: gridModel)
-                .navigationTitle("BlockHaus")
-                .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button {
-                            withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
-                                gridModel.roll()
-                            }
-                        } label: {
-                            Label("Roll", systemImage: "dice.fill")
-                                .font(.headline)
+            VStack(spacing: 0) {
+                TileStripView(model: gridModel)
+
+                PatternCanvasView(selectedTiles: gridModel.selectedTiles)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .navigationTitle("BlockHaus")
+            .toolbar {
+                ToolbarItem(placement: .bottomBar) {
+                    Button {
+                        withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
+                            gridModel.roll()
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(BauhausColors.red)
+                    } label: {
+                        Label("Roll", systemImage: "dice.fill")
+                            .font(.headline)
                     }
+                    .buttonStyle(.borderedProminent)
+                    .tint(BauhausColors.red)
                 }
-                .onReceive(NotificationCenter.default.publisher(for: .deviceDidShake)) { _ in
-                    withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
-                        gridModel.roll()
-                    }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .deviceDidShake)) { _ in
+                withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
+                    gridModel.roll()
                 }
+            }
         }
     }
 }
