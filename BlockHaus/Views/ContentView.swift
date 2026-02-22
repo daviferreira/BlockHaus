@@ -18,15 +18,26 @@ extension Notification.Name {
 // MARK: - Content View
 
 struct ContentView: View {
-    @State private var gridModel = GridModel()
+    @State private var settings = SettingsModel()
+    @State private var gridModel: GridModel
     @State private var shareItem: ShareableImage?
+    @State private var showSettings = false
+
+    init() {
+        let settings = SettingsModel()
+        _settings = State(initialValue: settings)
+        _gridModel = State(initialValue: GridModel(settings: settings))
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 TileStripView(model: gridModel)
 
-                PatternCanvasView(selectedTiles: gridModel.selectedTiles) {
+                PatternCanvasView(
+                    selectedTiles: gridModel.selectedTiles,
+                    gridSize: settings.gridSize
+                ) {
                     withAnimation(.spring(duration: 0.3)) {
                         gridModel.shuffleSelection()
                     }
@@ -36,6 +47,13 @@ struct ContentView: View {
             .navigationTitle("BlockHaus")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         withAnimation(.spring(duration: 0.4, bounce: 0.3)) {
@@ -69,18 +87,40 @@ struct ContentView: View {
             .sheet(item: $shareItem) { item in
                 ShareSheet(items: [item.image])
             }
+            .sheet(isPresented: $showSettings) {
+                SettingsView(settings: settings)
+            }
+            .onChange(of: settings.gridSize) {
+                gridModel.clearSelection()
+            }
+            .onChange(of: settings.paletteId) {
+                withAnimation { gridModel.roll() }
+            }
+            .onChange(of: settings.colorCount) {
+                withAnimation { gridModel.roll() }
+            }
+            .onChange(of: settings.circlesEnabled) {
+                withAnimation { gridModel.roll() }
+            }
+            .onChange(of: settings.trianglesEnabled) {
+                withAnimation { gridModel.roll() }
+            }
+            .onChange(of: settings.geometricEnabled) {
+                withAnimation { gridModel.roll() }
+            }
         }
     }
 
     private func renderGridImage(tiles: [TileModel], size: CGFloat = 1024) -> UIImage? {
         guard !tiles.isEmpty else { return nil }
-        let cellSize = size / 2
+        let gridSize = settings.gridSize
+        let cellSize = size / CGFloat(gridSize)
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
         return renderer.image { ctx in
             let gc = ctx.cgContext
-            for row in 0..<2 {
-                for col in 0..<2 {
-                    let index = (row * 2 + col) % tiles.count
+            for row in 0..<gridSize {
+                for col in 0..<gridSize {
+                    let index = (row * gridSize + col) % tiles.count
                     let tile = tiles[index]
                     let rect = CGRect(
                         x: CGFloat(col) * cellSize,

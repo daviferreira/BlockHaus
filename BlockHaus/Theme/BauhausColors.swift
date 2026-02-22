@@ -9,10 +9,10 @@ enum BauhausColors {
 
     static let palette: [Color] = [red, yellow, blue, black, white]
 
-    static func randomPair() -> (foreground: Color, background: Color) {
-        var colors = palette.shuffled()
-        let foreground = colors.removeFirst()
-        let background = colors.first!
+    static func randomPair(from colors: [Color]? = nil) -> (foreground: Color, background: Color) {
+        var pool = (colors ?? palette).shuffled()
+        let foreground = pool.removeFirst()
+        let background = pool.first!
         return (foreground, background)
     }
 }

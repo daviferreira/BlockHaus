@@ -18,6 +18,8 @@
 		A10009 /* BauhausColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* BauhausColors.swift */; };
 		A10010 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10010 /* Assets.xcassets */; };
 		A10011 /* TileStripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10011 /* TileStripView.swift */; };
+		A10012 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10012 /* SettingsModel.swift */; };
+		A10013 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10013 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		B10009 /* BauhausColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BauhausColors.swift; sourceTree = "<group>"; };
 		B10010 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B10011 /* TileStripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileStripView.swift; sourceTree = "<group>"; };
+		B10012 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
+		B10013 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C10001 /* BlockHaus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlockHaus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -72,6 +76,7 @@
 				B10006 /* TilePattern.swift */,
 				B10007 /* TileModel.swift */,
 				B10008 /* GridModel.swift */,
+				B10012 /* SettingsModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -84,6 +89,7 @@
 				B10011 /* TileStripView.swift */,
 				B10004 /* TileView.swift */,
 				B10005 /* TilePatternRenderer.swift */,
+				B10013 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -183,6 +189,8 @@
 				A10007 /* TileModel.swift in Sources */,
 				A10008 /* GridModel.swift in Sources */,
 				A10009 /* BauhausColors.swift in Sources */,
+				A10012 /* SettingsModel.swift in Sources */,
+				A10013 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,7 +338,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockhaus.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -359,7 +367,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.blockhaus.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

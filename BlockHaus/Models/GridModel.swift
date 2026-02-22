@@ -5,9 +5,13 @@ class GridModel {
     var tiles: [TileModel]
     private(set) var rollTrigger: Int = 0
     private var selectionOrder: [UUID] = []
+    let settings: SettingsModel
 
-    init(count: Int = 20) {
-        tiles = (0..<count).map { _ in TileModel.random() }
+    init(settings: SettingsModel, count: Int = 20) {
+        self.settings = settings
+        tiles = (0..<count).map { _ in
+            TileModel.random(colors: settings.activeColors, patterns: settings.activePatterns)
+        }
     }
 
     var selectedTiles: [TileModel] {
@@ -27,7 +31,7 @@ class GridModel {
                 tiles[tileIndex].isSelected = false
             }
         } else {
-            guard selectionOrder.count < 4 else { return }
+            guard selectionOrder.count < settings.maxSelection else { return }
             selectionOrder.append(id)
             if let tileIndex = tiles.firstIndex(where: { $0.id == id }) {
                 tiles[tileIndex].isSelected = true
@@ -40,14 +44,23 @@ class GridModel {
         selectionOrder.shuffle()
     }
 
+    func clearSelection() {
+        selectionOrder.removeAll()
+        for index in tiles.indices {
+            tiles[index].isSelected = false
+        }
+    }
+
     func roll() {
         rollTrigger += 1
         selectionOrder.removeAll()
+        let colors = settings.activeColors
+        let patterns = settings.activePatterns
         for index in tiles.indices {
-            let colors = BauhausColors.randomPair()
-            tiles[index].pattern = .random()
-            tiles[index].foreground = colors.foreground
-            tiles[index].background = colors.background
+            let pair = BauhausColors.randomPair(from: colors)
+            tiles[index].pattern = TilePattern.random(from: patterns)
+            tiles[index].foreground = pair.foreground
+            tiles[index].background = pair.background
             tiles[index].isSelected = false
         }
     }

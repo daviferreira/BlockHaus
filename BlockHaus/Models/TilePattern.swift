@@ -1,5 +1,11 @@
 import Foundation
 
+enum PatternCategory: String, CaseIterable {
+    case circles
+    case triangles
+    case geometric
+}
+
 enum TilePattern: Int, CaseIterable {
     case fullCircle
     case halfCircleTop
@@ -22,13 +28,27 @@ enum TilePattern: Int, CaseIterable {
     case cross
     case nestedSquares
 
+    var category: PatternCategory {
+        switch self {
+        case .fullCircle, .halfCircleTop, .halfCircleBottom, .halfCircleLeft, .halfCircleRight,
+             .quarterCircleTL, .quarterCircleTR, .quarterCircleBL, .quarterCircleBR:
+            return .circles
+        case .triangleUp, .triangleDown, .triangleLeft, .triangleRight:
+            return .triangles
+        case .diagonalSplit, .horizontalStripes, .verticalStripes, .concentricCircles,
+             .dotGrid, .cross, .nestedSquares:
+            return .geometric
+        }
+    }
+
     func next() -> TilePattern {
         let all = Self.allCases
         let nextIndex = (self.rawValue + 1) % all.count
         return all[nextIndex]
     }
 
-    static func random() -> TilePattern {
-        allCases.randomElement()!
+    static func random(from patterns: [TilePattern]? = nil) -> TilePattern {
+        let pool = patterns ?? Array(allCases)
+        return pool.randomElement() ?? allCases.randomElement()!
     }
 }

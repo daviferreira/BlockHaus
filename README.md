@@ -14,17 +14,18 @@
 
 ---
 
-Inspired by classic Bauhaus geometric forms. Pick up to 4 tiles from a randomized strip, and watch them fill a canvas in a repeating pattern.
+Inspired by classic Bauhaus geometric forms. Pick tiles from a randomized strip, and watch them fill a canvas in a repeating pattern. Customize grid size, color palettes, and geometric forms.
 
 ## Features
 
 - **20 geometric tile patterns** — circles, half-circles, quarter-circles, triangles, stripes, dots, crosses, nested squares, and more
 - **Tile strip** — horizontal scrollable row of randomized tiles
-- **Tap to select** up to 4 tiles (numbered 1-4 in selection order)
-- **2x2 pattern grid** — displays your selected tiles in a compact composition; tap to shuffle the order
-- **Generate** — re-randomize all tiles and reset selections
+- **Tap to select** tiles (numbered in selection order)
+- **Pattern grid** — displays your selected tiles in a repeating composition; tap to shuffle the order
+- **Settings** — customize grid size (2x2, 3x3, 4x4), color palette, number of colors, and geometric forms
+- **5 color palettes** — Bauhaus, Fluorescent, Pastel, Monochrome, Earth
+- **Share** — export your composition as a PNG image
 - **Shake** your device to regenerate
-- **Bauhaus color palette** — red, yellow, blue, black, white
 - **Adaptive layout** — strip and canvas reflow on rotation and iPad
 
 ## Requirements
@@ -43,23 +44,25 @@ Build and run on any iPhone or iPad simulator.
 
 ## Architecture
 
-Minimal — 9 Swift files, no external dependencies.
+Minimal — 11 Swift files, no external dependencies.
 
 ```
 BlockHaus/
 ├── BlockHausApp.swift
 ├── Models/
-│   ├── TilePattern.swift          # 20 pattern cases
+│   ├── TilePattern.swift          # 20 pattern cases + categories
 │   ├── TileModel.swift            # Tile state
-│   └── GridModel.swift            # @Observable model + selection logic
+│   ├── GridModel.swift            # @Observable model + selection logic
+│   └── SettingsModel.swift        # Grid size, palettes, pattern toggles
 ├── Views/
 │   ├── ContentView.swift          # Root + toolbar + shake detection
 │   ├── TileStripView.swift        # Horizontal scrollable tile selector
 │   ├── PatternCanvasView.swift    # Canvas-based repeating pattern grid
 │   ├── TileView.swift             # Canvas-based tile rendering
-│   └── TilePatternRenderer.swift  # All 20 pattern draw functions
+│   ├── TilePatternRenderer.swift  # All 20 pattern draw functions
+│   └── SettingsView.swift         # Settings form (grid, palette, forms)
 └── Theme/
-    └── BauhausColors.swift        # Bauhaus palette constants
+    └── BauhausColors.swift        # Color palette definitions
 ```
 
 ## License
